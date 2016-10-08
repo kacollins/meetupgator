@@ -142,16 +142,6 @@ function getGroups() {
   return groupNames;
 }
 
-function removeGroupFromHash(groupId) {
-  var groups = getGroupsFromHash();
-  var idx = groups.indexOf(groupId);
-  if (idx != -1) {
-    groups.splice(idx, 1);
-    changeHashParam('groups', groups.join(','));
-  }
-}
-
-
 function renderEvents() {
   $('#events-list').empty();
   $('#events-table tbody').empty();
@@ -204,14 +194,6 @@ function renderGroups() {
     $groupRow.append('<td>' + groupStr);
     var badgeClass = (MG.groupedEvents[groupId].length > 0) ? 'badge badge-success' : 'badge';
     $groupRow.append('<td><span class="' + badgeClass + '">' + MG.groupedEvents[groupId].length + '</span>');
-    var $removeButton = $('<td><button class="btn btn-table remove-group">X</button>');
-    $removeButton.on('click', function() {
-      delete MG.groupedEvents[groupId];
-      removeGroupFromHash(groupId);
-      renderGroups();
-      renderEvents();
-    });
-    $groupRow.append($removeButton);
     $('#groups-table tbody').append($groupRow);
   });
 
@@ -298,12 +280,6 @@ $(document).ready(function(){
     $('#events-calendar').fullCalendar('addEventSource', privateCalendar);
     var $calendarRow = $('<tr></tr>');
     $calendarRow.append('<td><a target="_blank" href="' + calendarUrl + '">' + calendarUsername + '</a></td>');
-    var $removeButton = $('<td><button class="btn btn-table remove-group">X</button>');
-    $removeButton.on('click', function() {
-      $calendarRow.remove();
-      $('#events-calendar').fullCalendar('removeEventSource', privateCalendar);
-    });
-    $calendarRow.append($removeButton);
     $('#calendars-table').append($calendarRow);
   }
 
