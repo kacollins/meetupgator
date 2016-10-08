@@ -298,7 +298,7 @@ $(document).ready(function(){
       var allEvents = [];
       $.each(MG.groupedEvents, function(groupId, events) {
         $.each(events, function(index, event) {
-          allEvents.push({title: event.name, start: new Date(event.time), url: event.event_url, color: '#C92525'});
+          allEvents.push({title: event.group.name, start: new Date(event.time), url: event.event_url, color: '#C92525'});
         });
       });
       callback(allEvents);
