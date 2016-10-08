@@ -27,12 +27,6 @@
 
   <div style="width: 100%;">
     <div class="pull-left" style="width: 30%;">
-      <p>To add a group, enter its meetup URL or ID: <br>
-      <div class="form-inline">
-      <input type="text" id="group-id"> <button id="add-group" class="btn btn-small" type="button">Add</button>
-      </div>
-      </p>
-
       <table class="table" id="groups-table" style="display:none;">
        <thead>
         <tr><th>Group  <th># Events <th>
@@ -132,12 +126,6 @@ function getGroupsFromHash() {
   var groupsHash = getHashParam('groups');
   if (groupsHash) return groupsHash.split(',');
   return [];
-}
-
-function addGroupToHash(groupId) {
-  var groups = getGroupsFromHash();
-  groups.push(groupId);
-  changeHashParam('groups', groups.join(','));
 }
 
 function getGroups() {
@@ -265,19 +253,6 @@ function refreshGroups() {
 }
 
 $(document).ready(function(){
-
-  $('#add-group').on('click', function(event) {
-    event.preventDefault();
-    var groupId = $('#group-id').val();
-    if (groupId.indexOf('meetup.com') > -1) {
-      var regEx = /meetup.com\/([^/]*)/g;
-      groupId = regEx.exec(groupId)[1];
-    }
-    if (!MG.groupedEvents[groupId]) {
-      addGroupToHash(groupId);
-      getGroupEvents(groupId);
-    }
-  });
 
   $('#events-calendar').fullCalendar({
     editable: false,
