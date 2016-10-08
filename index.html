@@ -3,8 +3,8 @@
  <head>
   <title>MeetupGator</title>
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-  <link rel='stylesheet' type='text/css' href='/css/fullcalendar.css' />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' href='css/fullcalendar.css' />
   <style>
 .btn.btn-table {
   padding: 1px 5px 1px;
@@ -21,7 +21,7 @@
 
   <div style="border-bottom: 1px solid #ccc; margin-bottom: 15px;">
    <h1><span style="color:#C92525">Meetup</span><span style="color:darkgreen">Gator</span>
-    <img src="/img/gator.gif" style="height: 60px; float:right" title="Aren't I sexy? Giggity gatorty!">
+    <img src="img/gator.gif" style="height: 60px; float:right" title="Aren't I sexy? Giggity gatorty!">
    </h1>
    <p>See upcoming events from multiple meetup groups, all on one page. Bookmark for easy access.
 For example, check out the <a href="/#groups=sf-html5,jsmeetup,beerjs,BayNode">SF JS meetups</a>, the <a href="/#groups=Women-Who-Code-SF,Girl-Develop-It-San-Francisco,PyLadiesSF">SF Women in Tech meetups</a>
@@ -29,7 +29,7 @@ or the <a href="/#groups=girldevelopit,Girl-Develop-It-Cincinnati,girldevelopitc
    </p>
   </div>
 
-     
+
 
   <div style="width: 100%;">
     <div class="pull-left" style="width: 30%;">
@@ -88,11 +88,12 @@ or the <a href="/#groups=girldevelopit,Girl-Develop-It-Cincinnati,girldevelopitc
 
  </div>
 
- <script src="/js/moment.min.js"></script>
- <script src="/js/jquery.min.js"></script>
- <script src='/js/fullcalendar.min.js'></script>
- <script src='/js/gcal.js'></script>
- <script src='/js/lscache.js'></script>
+ <script src="js/moment.min.js"></script>
+ <script src="js/jquery.min.js"></script>
+ <script src='js/fullcalendar.js'></script>
+ <script src='js/gcal.js'></script>
+ <script src='js/lscache.js'></script>
+ <script src="data/usergroups.json"></script>
 <script type="text/javascript">
 var MG = {};
 MG.groups = [];
@@ -145,6 +146,20 @@ function addGroupToHash(groupId) {
   changeHashParam('groups', groups.join(','));
 }
 
+function getGroups() {
+  var groups = JSON.parse(usergroups);
+
+  var groupNames = groups
+  .filter(function(group) {
+    return group["nameInMeetupURL"].length > 0;
+  })
+  .map(function(group){
+    return group["nameInMeetupURL"];
+  });
+
+  return groupNames;
+}
+
 function removeGroupFromHash(groupId) {
   var groups = getGroupsFromHash();
   var idx = groups.indexOf(groupId);
@@ -170,9 +185,9 @@ function renderEvents() {
   });
 
   // Add to table
-  
+
   $.each(allEvents, function(index, event) {
-    
+
     var dateTime = moment(event.time).format('ddd, MMM Do, h:mma');
     var eventStr = '<a href="' + event.event_url + '">' + event.name + '</a>';
     var groupId  = event.group.urlname;
@@ -240,7 +255,8 @@ function getGroupEvents(groupId) {
 
 function refreshGroups() {
   // For anything in hash we dont have events for, fetch them
-  var groups = getGroupsFromHash();
+  var groups = getGroups();
+
   $.each(groups, function(index, groupId) {
     if (!(groupId in MG.groupedEvents)) {
       getGroupEvents(groupId);
@@ -341,7 +357,7 @@ $(document).ready(function(){
     });
     lscache.set('calendars', calendars);
 
-    var groups = getGroupsFromHash();
+    var groups = getGroups();
     lscache.set('groups', groups);
   });
 
@@ -362,7 +378,7 @@ $(document).ready(function(){
     addCalendar(calendarUrl);
   });
 
-  // If there's nothing after the hash, we use groups from localStorage if there are any. 
+  // If there's nothing after the hash, we use groups from localStorage if there are any.
   // If there is anything in the hash, we refresh the groups.
   if (window.location.hash.length < 2) {
     var groups = lscache.get('groups');
