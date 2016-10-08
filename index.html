@@ -87,45 +87,12 @@ var MG = {};
 MG.groups = [];
 MG.groupedEvents = {};
 
-function getHashParam(name) {
-  var regexS = name + "=([^&#]*)";
-  var regex = new RegExp(regexS);
-  var splitUrl = unescape(window.location.href).split('#');
-  var hash  = ((splitUrl.length > 1) && splitUrl[1]) || '';
-  var results = regex.exec(hash);
-  if( results === null )
-    return null;
-  else
-    return results[1];
-}
-
-function changeHashParam(name, value) {
-  var regexS = name  + "=([^&#]*)";
-  var regex = new RegExp(regexS);
-  var hash  = window.location.hash;
-  var results = regex.exec(hash);
-  if (getHashParam(name)) {
-    window.location.hash = window.location.hash.replace(regex, name + '=' + value);
-  } else {
-    if (window.location.hash.indexOf('=') > -1) {
-      window.location.hash += '&';
-    }
-    window.location.hash += name + '=' + value;
-  }
-}
-
 function changeView(viewId) {
   $('.events-view').hide();
   $('#events-' + viewId).show();
 
   $('.events-link').removeClass('active');
   $('#events-' + viewId + '-link').addClass('active');
-}
-
-function getGroupsFromHash() {
-  var groupsHash = getHashParam('groups');
-  if (groupsHash) return groupsHash.split(',');
-  return [];
 }
 
 function getGroups() {
@@ -322,16 +289,7 @@ $(document).ready(function(){
     addCalendar(calendarUrl);
   });
 
-  // If there's nothing after the hash, we use groups from localStorage if there are any.
-  // If there is anything in the hash, we refresh the groups.
-  if (window.location.hash.length < 2) {
-    var groups = lscache.get('groups');
-    if (groups) {
-      changeHashParam('groups', groups.join(','));
-    }
-  } else {
-    refreshGroups();
-  }
+  refreshGroups();
 
   $('#events-calendar').fullCalendar('refetchEvents');
 });
