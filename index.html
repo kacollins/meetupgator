@@ -26,7 +26,7 @@
 
 
   <div style="width: 100%;">
-    <div class="pull-left" style="width: 30%;">
+    <div class="pull-left" style="width: 35%;">
       <table class="table" id="groups-table" style="display:none;">
        <thead>
         <tr><th>Group  <th># Events <th>
@@ -35,11 +35,6 @@
       </table>
 
       <br>
-
-      <p>To add your Google calendar, enter <a href="http://support.google.com/calendar/bin/answer.py?hl=en&answer=37648">its URL</a>:</p>
-      <div class="form-inline">
-      <input type="text" id="calendar-url">  <button id="add-calendar" class="btn btn-small" type="button">Add</button>
-      </div>
       <table id="calendars-table" class="table" style="margin-top: 10px;">
        <tbody></tbody>
       </table>
@@ -79,7 +74,6 @@
  <script src="js/jquery.min.js"></script>
  <script src='js/fullcalendar.js'></script>
  <script src='js/gcal.js'></script>
- <script src='js/lscache.js'></script>
  <script src="data/usergroups.json"></script>
 <script type="text/javascript">
 var MG = {};
@@ -245,16 +239,6 @@ $(document).ready(function(){
       var calendarUrl = $(this).attr('href');
       calendars.push(calendarUrl);
     });
-    lscache.set('calendars', calendars);
-
-    var groups = getGroups();
-    lscache.set('groups', groups);
-  });
-
-  // If there are calendars in localStorage, use them.
-  var calendars = lscache.get('calendars');
-  $.each(calendars || [], function(index, calendarUrl) {
-    addCalendar(calendarUrl);
   });
 
   refreshGroups();
