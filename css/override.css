@@ -1,0 +1,9 @@
+.fc-scroller {
+	overflow: visible !important;
+	height: auto !important;
+}
+	
+.fc-day-grid-event .fc-content {
+	white-space: normal;
+	overflow: visible;
+}
