@@ -82,17 +82,17 @@ function changeView(viewId) {
 }
 
 function getGroups() {
-  var groups = JSON.parse(usergroups);
+    MG.groups = JSON.parse(usergroups);
+}
 
-  var groupNames = groups
-  .filter(function(group) {
-    return group["nameInMeetupURL"].length > 0;
-  })
-  .map(function(group){
-    return group["nameInMeetupURL"];
-  });
-
-  return groupNames;
+function getMeetupGroupNames() {
+    return MG.groups
+            .filter(function(group) {
+                return group["nameInMeetupURL"].length > 0;
+            })
+            .map(function(group){
+                return group["nameInMeetupURL"];
+            });
 }
 
 function renderEvents() {
@@ -133,26 +133,38 @@ function renderEvents() {
 function renderGroups() {
   $('#groups-table tbody').empty();
 
-  var allGroups = [];
-  $.each(MG.groupedEvents, function(groupId, events) {
-    allGroups.push(groupId);
-  });
+  var allGroups = MG.groups;
 
   // Sort alphabetically
-  allGroups.sort();
+  allGroups.sort(compare);
 
-  $.each(allGroups, function(index, groupId) {
-    var groupStr = '<a href="http://meetup.com/' + groupId + '">' + groupId + '</a>';
-    var $groupRow = $('<tr>').addClass('group-' + groupId);
+  $.each(allGroups, function(index, group) {
+    var groupStr = group.nameInMeetupURL.length > 0
+            ? '<a href="http://meetup.com/' + group.nameInMeetupURL + '">' + group.name + '</a>'
+            : group.name;
+    var $groupRow = $('<tr>').addClass('group-' + group.nameInMeetupURL);
     $groupRow.append('<td>' + groupStr);
-    var badgeClass = (MG.groupedEvents[groupId].length > 0) ? 'badge badge-success' : 'badge';
-    $groupRow.append('<td><span class="' + badgeClass + '">' + MG.groupedEvents[groupId].length + '</span>');
+
+      if (MG.groupedEvents[group.nameInMeetupURL] == undefined)
+      {
+          $groupRow.append('<td>');
+      }
+      else
+      {
+          var badgeClass = (MG.groupedEvents[group.nameInMeetupURL].length > 0) ? 'badge badge-success' : 'badge';
+          $groupRow.append('<td><span class="' + badgeClass + '">' + MG.groupedEvents[group.nameInMeetupURL].length + '</span>');
+      }
+
     $('#groups-table tbody').append($groupRow);
   });
 
   if (allGroups.length > 0) {
     $('#groups-table').show();
   }
+}
+
+function compare(a, b) {
+    return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
 
 function getGroupEvents(groupId) {
@@ -170,14 +182,8 @@ function getGroupEvents(groupId) {
 }
 
 function refreshGroups() {
-  // For anything in hash we dont have events for, fetch them
-  var groups = getGroups();
-
-  $.each(groups, function(index, groupId) {
-    if (!(groupId in MG.groupedEvents)) {
-      getGroupEvents(groupId);
-    }
-  });
+    getGroups();
+    getMeetupGroupNames().forEach(getGroupEvents);
 }
 
 $(document).ready(function(){
