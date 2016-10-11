@@ -175,8 +175,12 @@ function getGroupEvents(groupId) {
   $.getJSON(proxyUrl, function(data){
     if(data){
       MG.groupedEvents[groupId] = data.results;
-      renderGroups();
-      renderEvents();
+
+        //only render groups and events after all meetup group events have been loaded
+        if (Object.getOwnPropertyNames(MG.groupedEvents).length == getMeetupGroupNames().length) {
+            renderGroups();
+            renderEvents();
+        }
     }
   });
 }
