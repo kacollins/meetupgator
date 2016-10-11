@@ -207,33 +207,6 @@ $(document).ready(function(){
     }
   });
 
-  function addCalendar(calendarUrl) {
-    var regEx = /feeds\/([^/]*)/g;
-    var calendarMatches = regEx.exec(calendarUrl);
-    if (!calendarMatches) {
-      alert('Dont think that a valid Google calendar feed, sorry!');
-      return;
-    }
-    calendarUsername = unescape(calendarMatches[1]);
-    var privateCalendar = {url: calendarUrl};
-    $('#events-calendar').fullCalendar('addEventSource', privateCalendar);
-    var $calendarRow = $('<tr></tr>');
-    $calendarRow.append('<td><a target="_blank" href="' + calendarUrl + '">' + calendarUsername + '</a></td>');
-    $('#calendars-table').append($calendarRow);
-  }
-
-  $('#add-calendar').click(function() {
-    addCalendar($('#calendar-url').val());
-  });
-
-  $(window).on('unload', function() {
-    var calendars = [];
-    $('#calendars-table td a').each(function() {
-      var calendarUrl = $(this).attr('href');
-      calendars.push(calendarUrl);
-    });
-  });
-
   refreshGroups();
 
   $('#events-calendar').fullCalendar('refetchEvents');
