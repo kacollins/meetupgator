@@ -175,11 +175,23 @@ function getGroupEvents(group) {
     getGroupEventsByStatus(group, "past");
 }
 
+function getDateRange() {
+    var beginDate = new Date(); //first day of last month
+    beginDate.setMonth(beginDate.getMonth() - 1);
+    beginDate.setDate(1);
+
+    var endDate = new Date(beginDate); //a year later
+    endDate.setMonth(endDate.getMonth() + 12);
+    endDate.setDate(endDate.getDate() - 1);
+
+    return beginDate.getTime() + "," + endDate.getTime();
+}
+
 function getGroupEventsByStatus(group, status) {
     var meetupParams = {
         'group_urlname': (group.nameInMeetupURL.length > 0 ? group.nameInMeetupURL : group.name),
         'status': status,
-        'time': '-1m,11m'
+        'time': getDateRange()
     };
   var meetupUrl = 'https://api.meetup.com/2/events.json?' + $.param(meetupParams);
   var proxyUrl = 'https://crossorigin.me/' + meetupUrl;
