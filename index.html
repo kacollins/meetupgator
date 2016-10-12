@@ -185,6 +185,42 @@ function getGroupEvents(groupId) {
   });
 }
 
+function createScheduledMeetup(group, regularMeeting, year, month) {
+    var scheduledTime = getScheduledTime(regularMeeting, year, month);
+
+    return {
+        name: regularMeeting.name.length > 0 ? regularMeeting.name : group.name,
+        time: scheduledTime,
+        event_url: "",
+        group: {
+            name: group.name,
+            urlname: ""
+        }
+    };
+}
+
+function getScheduledTime(regularMeeting, year, month) {
+    var firstDayOfMonth = new Date(year, month, 1, 0, 0, 0);
+
+    var daysToAdd = regularMeeting.weekDay - firstDayOfMonth.getDay();
+    if (daysToAdd < 0)
+    {
+        daysToAdd += 7;
+    }
+
+    daysToAdd += 7 * (regularMeeting.week - 1);
+
+    var scheduledTime = new Date(year, month, 1 + daysToAdd, regularMeeting.hour, regularMeeting.minute, 0);
+
+    //move to 4th week if there isn't a 5th week
+    if (scheduledTime.getMonth() > month)
+    {
+        scheduledTime.setDate(scheduledTime.getDate() - 7);
+    }
+
+    return scheduledTime;
+}
+
 function refreshGroups() {
     getGroups();
     getMeetupGroupNames().forEach(getGroupEvents);
