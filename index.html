@@ -281,6 +281,41 @@ function refreshGroups() {
     MG.groups.forEach(getGroupEvents);
 }
 
+function getDisplayName(event)
+{
+    var groupName;
+
+    if (event.group.urlname == "")
+    {
+        groupName = event.group.name;
+    }
+    else
+    {
+        groupName = MG.groups
+                .filter(function(meetupGroup)
+                {
+                    return meetupGroup["nameInMeetupURL"].toUpperCase() == event.group.urlname.toUpperCase();
+                })
+                .map(function(meetupGroup)
+                {
+                    return meetupGroup["name"];
+                })[0];
+    }
+
+    if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
+    {
+        groupName += " (Tulsa)";
+    }
+
+    //HACK
+    if (!groupName.includes("Tulsa") && !groupName.includes("OKC"))
+    {
+        groupName += " (OKC)";
+    }
+
+    return groupName;
+}
+
 $(document).ready(function(){
 
   $('#events-calendar').fullCalendar({
@@ -297,7 +332,7 @@ $(document).ready(function(){
         $.each(events, function(index, event) {
           allEvents.push(
             {
-              title: event.group.name, 
+              title: getDisplayName(event),
               start: new Date(event.time), 
               url: event.event_url, 
               color: (event.event_url == "" ? '#777777' : '#C92525')
