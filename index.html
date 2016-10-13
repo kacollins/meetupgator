@@ -16,8 +16,6 @@
    </h1>
   </div>
 
-
-
   <div style="width: 100%;">
     <div class="pull-left" style="width: 25%;">
       <table class="table" id="groups-table" style="display:none;">
@@ -26,14 +24,6 @@
        </thead>
        <tbody></tbody>
       </table>
-
-      <br>
-      <table id="calendars-table" class="table" style="margin-top: 10px;">
-       <tbody></tbody>
-      </table>
-      <div>
-      </div>
-
     </div>
 
     <div class="pull-right" style="width: 75%;">
@@ -54,13 +44,10 @@
       </table>
 
       <ul id="events-list" class="events-view" style="display:none;clear:left;">
-
       </ul>
 
     </div>
   </div>
-
-
  </div>
 
  <script src="js/moment.min.js"></script>
@@ -345,8 +332,8 @@ $(document).ready(function(){
           allEvents.push(
             {
               title: getDisplayName(event),
-              start: new Date(event.time), 
-              url: event.event_url, 
+              start: new Date(event.time),
+              url: event.event_url,
               color: (event.event_url == "" ? '#777777' : '#C92525')
             });
         });
