@@ -50,6 +50,7 @@
   </div>
  </div>
 
+ <script src="js/lodash.js"></script>
  <script src="js/moment.min.js"></script>
  <script src="js/jquery.min.js"></script>
  <script src='js/fullcalendar.js'></script>
@@ -174,16 +175,22 @@ function getDateRange() {
     MG.dateRange = beginDate.getTime() + "," + endDate.getTime();
 }
 
-function createCurrentMonthEvents(group) {
+function createEvents(group)
+{
     MG.groupedEvents[group.name] = MG.groupedEvents[group.name] || [];
 
-    var now = new Date();
-    for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+    //create events for 12 months, starting with last month
+    for (var i = -1; i <= 10; i++)
     {
-        //create scheduled meetup for current month
-        meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
-                now.getFullYear(), now.getMonth());
-        MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+        var asOfDate = new Date();
+        asOfDate.setMonth(asOfDate.getMonth() + i);
+
+        for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+        {
+            var meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
+                    asOfDate.getFullYear(), asOfDate.getMonth());
+            MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+        }
     }
 }
 
@@ -195,25 +202,25 @@ function getPastEvents(group) {
     getGroupEventsByStatus(group, "past");
 }
 
-function removeScheduledEventsForCurrentMonth(events, group, status)
+function removeScheduledEvents(events, group, status)
 {
-    if (events.filter(function (event)
-            {
-                return new Date(event.time).getMonth() == new Date().getMonth();
-            }).length > 0)
+    var months = _.uniq(events.map(function (event)
+    {
+        return new Date(event.time).getMonth();
+    }));
+
+    for (var i = 0; i < months.length; i++)
     {
         MG.groupedEvents[group.name] = MG.groupedEvents[group.name].filter(function (event)
         {
-            return !(new Date(event.time).getMonth() == new Date().getMonth()
-                    && (status == "upcoming" && event.time > new Date())
-                    || (status == "past" && event.time < new Date()));
+            return !(new Date(event.time).getMonth() == months[i]
+            && (status == "upcoming" && event.time > new Date())
+            || (status == "past" && event.time < new Date()));
         });
     }
 }
 
 function getGroupEventsByStatus(group, status) {
-    MG.groupedEvents[group.name] = MG.groupedEvents[group.name] || [];
-
     if (group.nameInMeetupURL.length > 0)
     {
         var meetupParams = {
@@ -228,58 +235,12 @@ function getGroupEventsByStatus(group, status) {
         {
             if (data)
             {
-                removeScheduledEventsForCurrentMonth(data.results, group, status);
+                removeScheduledEvents(data.results, group, status);
                 MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
-                createScheduledMeetups(group, data.results, status);
                 renderGroups();
                 renderEvents();
             }
         });
-    }
-    else
-    {
-        createScheduledMeetups(group, undefined, status);
-    }
-}
-
-function createScheduledMeetups(group, events, status)
-{
-    for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
-    {
-        createMeetupsForAdjacentMonths(events, group, meetingIndex, status);
-    }
-}
-
-function createMeetupsForAdjacentMonths(events, group, meetingIndex, status)
-{
-    if (status == "upcoming")
-    {
-        for (var monthOffset = 1; monthOffset <= 10; monthOffset++)
-        {
-            createMissingMeetup(monthOffset, events, group, meetingIndex);
-
-        }
-    }
-    else
-    {
-        //create meetup for previous month
-        createMissingMeetup(-1, events, group, meetingIndex);
-    }
-}
-
-function createMissingMeetup(monthOffset, events, group, meetingIndex)
-{
-    var asOfDate = new Date();
-    asOfDate.setMonth(asOfDate.getMonth() + monthOffset);
-
-    if (events == undefined || events.filter(function (event)
-            {
-                return new Date(event.time).getMonth() == asOfDate.getMonth();
-            }).length == 0)
-    {
-        //create scheduled meetup for month
-        MG.groupedEvents[group.name].push(createScheduledMeetup(group, group.regularMeetings[meetingIndex],
-                asOfDate.getFullYear(), asOfDate.getMonth()));
     }
 }
 
@@ -322,7 +283,7 @@ function getScheduledTime(regularMeeting, year, month) {
 function refreshGroups() {
     getGroups();
     getDateRange();
-    MG.groups.forEach(createCurrentMonthEvents);
+    MG.groups.forEach(createEvents);
     renderGroups();
     renderEvents();
     MG.groups.forEach(getUpcomingEvents);
