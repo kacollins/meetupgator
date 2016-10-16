@@ -59,6 +59,8 @@
 var MG = {};
 MG.groups = [];
 MG.groupedEvents = {};
+MG.dateRange = "";
+MG.currentMonthMeetups = [];
 
 function changeView(viewId) {
   $('.events-view').hide();
@@ -135,15 +137,10 @@ function renderGroups() {
     var $groupRow = $('<tr>').addClass('group-' + group.nameInMeetupURL);
     $groupRow.append('<td>' + groupStr);
 
-      if (MG.groupedEvents[group.name] == undefined)
-      {
-          $groupRow.append('<td>');
-      }
-      else
-      {
-          var badgeClass = (MG.groupedEvents[group.name].length > 0) ? 'badge badge-success' : 'badge';
-          $groupRow.append('<td><span class="' + badgeClass + '">' + MG.groupedEvents[group.name].length + '</span>');
-      }
+      var eventCount = MG.groupedEvents[group.name] == undefined ? 0 : MG.groupedEvents[group.name].length;
+
+      var badgeClass = (eventCount > 0) ? 'badge badge-success' : 'badge';
+      $groupRow.append('<td><span class="' + badgeClass + '">' + (eventCount > 0 ? eventCount : "loading") + '</span>');
 
     $('#groups-table tbody').append($groupRow);
   });
@@ -171,72 +168,96 @@ function getDateRange() {
     endDate.setMonth(endDate.getMonth() + 12);
     endDate.setDate(endDate.getDate() - 1);
 
-    return beginDate.getTime() + "," + endDate.getTime();
+    MG.dateRange = beginDate.getTime() + "," + endDate.getTime();
 }
 
 function getGroupEventsByStatus(group, status) {
-    var meetupParams = {
-        'group_urlname': (group.nameInMeetupURL.length > 0 ? group.nameInMeetupURL : group.name),
-        'status': status,
-        'time': getDateRange()
-    };
-  var meetupUrl = 'https://api.meetup.com/2/events.json?' + $.param(meetupParams);
-  var proxyUrl = 'https://crossorigin.me/' + meetupUrl;
+    MG.groupedEvents[group.name] = MG.groupedEvents[group.name] || [];
 
-  $.getJSON(proxyUrl, function(data){
-    if(data){
-        if (MG.groupedEvents[group.name] == undefined)
+    if (group.nameInMeetupURL.length > 0)
+    {
+        var meetupParams = {
+            'group_urlname': group.nameInMeetupURL ,
+            'status': status,
+            'time': MG.dateRange
+        };
+        var meetupUrl = 'https://api.meetup.com/2/events.json?' + $.param(meetupParams);
+        var proxyUrl = 'https://crossorigin.me/' + meetupUrl;
+
+        $.getJSON(proxyUrl, function (data)
         {
-            MG.groupedEvents[group.name] = [];
+            if (data)
+            {
+                MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
+                createScheduledMeetups(group, data.results, status);
+                renderGroups();
+                renderEvents();
+            }
+        });
+    }
+    else
+    {
+        createScheduledMeetups(group, undefined, status);
+    }
+}
+
+function createScheduledMeetups(group, events, status)
+{
+    for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+    {
+        createMeetupForCurrentMonth(events, group, meetingIndex, status);
+        createMeetupsForAdjacentMonths(events, group, meetingIndex, status);
+    }
+}
+
+function createMeetupForCurrentMonth(events, group, meetingIndex, status)
+{
+    var now = new Date();
+
+    if (events == undefined || events.filter(function (event)
+            {
+                return new Date(event.time).getMonth() == now.getMonth();
+            }).length == 0)
+    {
+        var meetupForCurrentMonth;
+
+        if (MG.currentMonthMeetups[group.name] == undefined)
+        {
+            //create scheduled meetup for current month
+            meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
+                    now.getFullYear(), now.getMonth());
+            MG.currentMonthMeetups[group.name] = meetupForCurrentMonth;
+        }
+        else
+        {
+            meetupForCurrentMonth = MG.currentMonthMeetups[group.name];
         }
 
-        MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
-
-        var now = new Date();
-        var asOfDate = new Date(now);
-
-        for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+        if ((status == "upcoming" && meetupForCurrentMonth.time > now)
+                || (status == "past" && meetupForCurrentMonth.time < now))
         {
-            if (data.results.filter(function (event)
-                    {
-                        return new Date(event.time).getMonth() == now.getMonth();
-                    }).length == 0)
-            {
-                //create scheduled meetup for current month
-                var meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
-                        now.getFullYear(), now.getMonth());
-
-                if ((status == "upcoming" && meetupForCurrentMonth.time > now)
-                        || (status == "past" && meetupForCurrentMonth.time < now))
-                {
-                    MG.groupedEvents[group.name].push(meetupForCurrentMonth);
-                }
-            }
-
-            for (var monthOffset = 1; monthOffset <= 2; monthOffset++)
-            {
-                asOfDate.setMonth(now.getMonth() + monthOffset * (status == "upcoming" ? 1 : -1));
-
-                if (data.results.filter(function (event)
-                        {
-                            return new Date(event.time).getMonth() == asOfDate.getMonth();
-                        }).length == 0)
-                {
-                    //create scheduled meetup for next/last month
-                    var scheduledMeetup = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
-                            asOfDate.getFullYear(), asOfDate.getMonth());
-                    MG.groupedEvents[group.name].push(scheduledMeetup);
-                }
-            }
-        }
-
-        //only render groups and events after all meetup group events have been loaded
-        if (Object.getOwnPropertyNames(MG.groupedEvents).length >= getMeetupGroupNames().length) {
-            renderGroups();
-            renderEvents();
+            MG.groupedEvents[group.name].push(meetupForCurrentMonth);
         }
     }
-  });
+}
+
+function createMeetupsForAdjacentMonths(events, group, meetingIndex, status)
+{
+    for (var monthOffset = 1; monthOffset <= (status == "upcoming" ? 10 : 1); monthOffset++)
+    {
+        var asOfDate = new Date();
+        asOfDate.setMonth(asOfDate.getMonth() + monthOffset * (status == "upcoming" ? 1 : -1));
+
+        if (events == undefined || events.filter(function (event)
+                {
+                    return new Date(event.time).getMonth() == asOfDate.getMonth();
+                }).length == 0)
+        {
+            //create scheduled meetup for month
+            MG.groupedEvents[group.name].push(createScheduledMeetup(group, group.regularMeetings[meetingIndex],
+                    asOfDate.getFullYear(), asOfDate.getMonth()));
+        }
+    }
 }
 
 function createScheduledMeetup(group, regularMeeting, year, month) {
@@ -277,6 +298,8 @@ function getScheduledTime(regularMeeting, year, month) {
 
 function refreshGroups() {
     getGroups();
+    renderGroups();
+    getDateRange();
     MG.groups.forEach(getGroupEvents);
 }
 
@@ -306,7 +329,7 @@ function getDisplayName(event)
         groupName += " (Tulsa)";
     }
 
-    //HACK
+    //TODO: Add city to json data
     if (!groupName.includes("Tulsa") && !groupName.includes("OKC"))
     {
         groupName += " (OKC)";
