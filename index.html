@@ -60,6 +60,7 @@ var MG = {};
 MG.groups = [];
 MG.groupedEvents = {};
 MG.dateRange = "";
+MG.holidays = [];
 
 function changeView(viewId) {
   $('.events-view').hide();
@@ -70,11 +71,11 @@ function changeView(viewId) {
 }
 
 //https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
-function loadJSON(callback)
+function loadJSON(filename, async, callback)
 {
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
-    xobj.open('GET', 'data/usergroups.json', false);
+    xobj.open('GET', 'data/' + filename + '.json', async);
     xobj.onreadystatechange = function ()
     {
         if (xobj.readyState == 4 && xobj.status == "200")
@@ -87,9 +88,41 @@ function loadJSON(callback)
 }
 
 function getGroups() {
-    loadJSON(function(response) {
+    loadJSON("usergroups", false, function(response) {
         // Parse JSON string into object
         MG.groups = JSON.parse(response);
+    });
+}
+
+function getHolidays()
+{
+    loadJSON("holidays", true, function (response)
+    {
+        var holidays = JSON.parse(response);
+        var beginDate = getBeginDate();
+        var holidayDate;
+        var year;
+        var month;
+        var lastMonth = new Date().getMonth() - 1;
+
+        for (var i = 0; i < holidays.length; i++)
+        {
+            month = holidays[i].month - 1;
+            year = beginDate.getFullYear() + (month >= lastMonth ? 0 : 1);
+
+            if (holidays[i].weekDay == undefined)
+            {
+                holidayDate = new Date(year, month, holidays[i].monthDay);
+            }
+            else
+            {
+                holidayDate = getDateByWeekDay(year, month, holidays[i].week, holidays[i].weekDay);
+            }
+
+            var holiday = {name: holidays[i].name, date: holidayDate};
+            console.log(holiday);
+            MG.holidays.push(holiday);
+        }
     });
 }
 
@@ -163,14 +196,25 @@ function compare(a, b) {
     return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
 
-function getDateRange() {
+function getBeginDate()
+{
     var beginDate = new Date(); //first day of last month
     beginDate.setMonth(beginDate.getMonth() - 1);
     beginDate.setDate(1);
+    return beginDate;
+}
 
+function getEndDate(beginDate)
+{
     var endDate = new Date(beginDate); //a year later
     endDate.setMonth(endDate.getMonth() + 12);
     endDate.setDate(endDate.getDate() - 1);
+    return endDate;
+}
+
+function getDateRange() {
+    var beginDate = getBeginDate();
+    var endDate = getEndDate(beginDate);
 
     MG.dateRange = beginDate.getTime() + "," + endDate.getTime();
 }
@@ -259,29 +303,38 @@ function createScheduledMeetup(group, regularMeeting, year, month) {
 }
 
 function getScheduledTime(regularMeeting, year, month) {
-    var firstDayOfMonth = new Date(year, month, 1, 0, 0, 0);
+    var scheduledTime = getDateByWeekDay(year, month, regularMeeting.week, regularMeeting.weekDay);
+    scheduledTime.setHours(regularMeeting.hour);
+    scheduledTime.setMinutes(regularMeeting.minute);
 
-    var daysToAdd = regularMeeting.weekDay - firstDayOfMonth.getDay();
+    return scheduledTime;
+}
+
+function getDateByWeekDay(year, month, week, weekDay) {
+    var firstDayOfMonth = new Date(year, month, 1);
+
+    var daysToAdd = weekDay - firstDayOfMonth.getDay();
     if (daysToAdd < 0)
     {
         daysToAdd += 7;
     }
 
-    daysToAdd += 7 * (regularMeeting.week - 1);
+    daysToAdd += 7 * (week - 1);
 
-    var scheduledTime = new Date(year, month, 1 + daysToAdd, regularMeeting.hour, regularMeeting.minute, 0);
+    var date = new Date(year, month, 1 + daysToAdd);
 
     //move to 4th week if there isn't a 5th week
-    if (scheduledTime.getMonth() != month)
+    if (date.getMonth() != month)
     {
-        scheduledTime.setDate(scheduledTime.getDate() - 7);
+        date.setDate(date.getDate() - 7);
     }
 
-    return scheduledTime;
+    return date;
 }
 
 function refreshGroups() {
     getGroups();
+    getHolidays();
     getDateRange();
     MG.groups.forEach(createEvents);
     renderGroups();
@@ -348,6 +401,17 @@ $(document).ready(function(){
             });
         });
       });
+
+        for(var i = 0; i < MG.holidays.length; i++)
+        {
+            allEvents.push({
+                title: MG.holidays[i].name,
+                start: MG.holidays[i].date,
+                allDay: true,
+                url: "",
+                color: '#3232A0'
+            });
+        }
       callback(allEvents);
     }
   });

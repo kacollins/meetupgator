@@ -1,0 +1,28 @@
+[{
+    "name": "New Year's Day",
+    "month": 1,
+    "monthDay": 1
+}, {
+    "name": "Memorial Day",
+    "month": 5,
+    "week": 5,
+    "weekDay": 1
+}, {
+    "name": "Independence Day",
+    "month": 7,
+    "monthDay": 4
+}, {
+    "name": "Labor Day",
+    "month": 9,
+    "week": 1,
+    "weekDay": 1
+}, {
+    "name": "Thanksgiving",
+    "month": 11,
+    "week": 4,
+    "weekDay": 4
+}, {
+    "name": "Christmas",
+    "month": 12,
+    "monthDay": 25
+}]
