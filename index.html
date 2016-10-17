@@ -100,30 +100,35 @@ function getHolidays()
     {
         var holidays = JSON.parse(response);
         var beginDate = getBeginDate();
-        var holidayDate;
-        var year;
-        var month;
-        var lastMonth = new Date().getMonth() - 1;
 
         for (var i = 0; i < holidays.length; i++)
         {
-            month = holidays[i].month - 1;
-            year = beginDate.getFullYear() + (month >= lastMonth ? 0 : 1);
-
-            if (holidays[i].weekDay == undefined)
-            {
-                holidayDate = new Date(year, month, holidays[i].monthDay);
-            }
-            else
-            {
-                holidayDate = getDateByWeekDay(year, month, holidays[i].week, holidays[i].weekDay);
-            }
-
-            var holiday = {name: holidays[i].name, date: holidayDate};
-            console.log(holiday);
-            MG.holidays.push(holiday);
+            var holidayDate = getHolidayDate(holidays[i], beginDate);
+            MG.holidays.push({
+                name: holidays[i].name,
+                date: holidayDate
+            });
         }
     });
+}
+
+function getHolidayDate(holiday, beginDate)
+{
+    var holidayDate;
+    var month = holiday.month - 1;
+    var lastMonth = new Date().getMonth() - 1;
+    var year = beginDate.getFullYear() + (month >= lastMonth ? 0 : 1);
+
+    if (holiday.weekDay == undefined)
+    {
+        holidayDate = new Date(year, month, holiday.monthDay);
+    }
+    else
+    {
+        holidayDate = getDateByWeekDay(year, month, holiday.week, holiday.weekDay);
+    }
+
+    return holidayDate;
 }
 
 function renderEvents() {
