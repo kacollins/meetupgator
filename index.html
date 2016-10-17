@@ -302,7 +302,7 @@ function createScheduledMeetup(group, regularMeeting, year, month) {
         event_url: "",
         group: {
             name: group.name,
-            urlname: ""
+            urlname: group.nameInMeetupURL
         }
     };
 }
@@ -361,12 +361,13 @@ function getDisplayName(event)
         groupName = MG.groups
                 .filter(function(meetupGroup)
                 {
-                    return meetupGroup["nameInMeetupURL"].toUpperCase() == event.group.urlname.toUpperCase();
+                    return meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase();
                 })
                 .map(function(meetupGroup)
                 {
-                    return meetupGroup["name"];
-                })[0];
+                    return meetupGroup.name;
+                })
+                [0];
     }
 
     if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
