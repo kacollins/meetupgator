@@ -1,195 +1,268 @@
-[{
-  "name": "Code for OKC",
-  "nameInMeetupURL": "Code-for-OKC",
-  "regularMeetings": [{
-    "name": "",
-    "week": 4,
-    "weekDay": 1,
-    "hour": 18,
-    "minute": 0
-  }, {
-    "name": "Virtual",
-    "week": 2,
-    "weekDay": 3,
-    "hour": 20,
-    "minute": 0
-  }]
-}, {
-  "name": "Code for Tulsa",
-  "nameInMeetupURL": "Code-for-Tulsa",
-  "regularMeetings": [{
-    "name": "",
-    "week": 3,
-    "weekDay": 1,
-    "hour": 18,
-    "minute": 0
-  }]
-}, {
-  "name": "Nerdy Girls Code Club",
-  "nameInMeetupURL": "",
-  "regularMeetings": [{
-    "name": "",
-    "week": 4,
-    "weekDay": 0,
-    "hour": 14,
-    "minute": 0
-  }]
-}, {
-  "name": "OK Game Devs",
-  "nameInMeetupURL": "Oklahoma-Game-Developers",
-  "regularMeetings": [{
-    "name": "",
-    "week": 1,
-    "weekDay": 4,
-    "hour": 19,
-    "minute": 0
-  }]
-}, {
-  "name": "OK PHP",
-  "nameInMeetupURL": "OklahomaPHP",
-  "regularMeetings": [{
-    "name": "OKC",
-    "week": 1,
-    "weekDay": 4,
-    "hour": 18,
-    "minute": 30
-  }, {
-    "name": "Tulsa",
-    "week": 3,
-    "weekDay": 1,
-    "hour": 18,
-    "minute": 0
-  }]
-}, {
-  "name": "OKC FP",
-  "nameInMeetupURL": "OKC-FP",
-  "regularMeetings": [{
-    "name": "",
-    "week": 5,
-    "weekDay": 2,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "OKC.js",
-  "nameInMeetupURL": "OKC-JS",
-  "regularMeetings": [{
-    "name": "",
-    "week": 3,
-    "weekDay": 2,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "OKC JUG",
-  "nameInMeetupURL": "",
-  "regularMeetings": [{
-    "name": "",
-    "week": 2,
-    "weekDay": 2,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "OKC LUGnuts",
-  "nameInMeetupURL": "OKC-LUGnuts",
-  "regularMeetings": [{
-    "name": "",
-    "week": 2,
-    "weekDay": 5,
-    "hour": 19,
-    "minute": 0
-  }]
-}, {
-  "name": "OKC MySQL",
-  "nameInMeetupURL": "Oklahoma-City-MySQL-Meetup",
-  "regularMeetings": [{
-    "name": "",
-    "week": 4,
-    "weekDay": 4,
-    "hour": 19,
-    "minute": 0
-  }]
-}, {
-  "name": "OKC Python",
-  "nameInMeetupURL": "Oklahoma-City-Python-Users-Group",
-  "regularMeetings": [{
-    "name": "",
-    "week": 2,
-    "weekDay": 3,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "OKC Ruby",
-  "nameInMeetupURL": "OKC-Ruby",
-  "regularMeetings": [{
-    "name": "",
-    "week": 2,
-    "weekDay": 4,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "OKC#",
-  "nameInMeetupURL": "OKC-Sharp",
-  "regularMeetings": [{
-    "name": "",
-    "week": 1,
-    "weekDay": 1,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "Refresh OKC",
-  "nameInMeetupURL": "Refresh-OKC",
-  "regularMeetings": [{
-    "name": "",
-    "week": 5,
-    "weekDay": 3,
-    "hour": 11,
-    "minute": 30
-  }]
-}, {
-  "name": "Techlahoma Board",
-  "nameInMeetupURL": "Techlahoma-Foundation",
-  "regularMeetings": [{
-    "name": "",
-    "week": 3,
-    "weekDay": 2,
-    "hour": 18,
-    "minute": 0
-  }]
-}, {
-  "name": "Tulsa Ruby",
-  "nameInMeetupURL": "tulsarb",
-  "regularMeetings": [{
-    "name": "",
-    "week": 3,
-    "weekDay": 1,
-    "hour": 18,
-    "minute": 0
-  }]
-}, {
-  "name": "Tulsa Web Devs",
-  "nameInMeetupURL": "Tulsa-Web-Devs",
-  "regularMeetings": [{
-    "name": "",
-    "week": 3,
-    "weekDay": 1,
-    "hour": 18,
-    "minute": 0
-  }, {
-    "name": "Coworking",
-    "week": 4,
-    "weekDay": 5,
-    "hour": 13,
-    "minute": 0
-  }, {
-    "name": "Hack Night",
-    "week": 1,
-    "weekDay": 2,
-    "hour": 18,
-    "minute": 0
-  }]
-}]
+[
+  {
+    "name": "Code for OKC",
+    "nameInMeetupURL": "Code-for-OKC",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 4,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      },
+      {
+        "name": "Virtual",
+        "week": 2,
+        "weekDay": 3,
+        "hour": 20,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Code for Tulsa",
+    "nameInMeetupURL": "Code-for-Tulsa",
+    "city": "Tulsa",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Nerdy Girls Code Club",
+    "nameInMeetupURL": "",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 4,
+        "weekDay": 0,
+        "hour": 14,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OK Game Devs",
+    "nameInMeetupURL": "Oklahoma-Game-Developers",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 1,
+        "weekDay": 4,
+        "hour": 19,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OK PHP",
+    "nameInMeetupURL": "OklahomaPHP",
+    "city": "",
+    "regularMeetings": [
+      {
+        "name": "OKC",
+        "week": 1,
+        "weekDay": 4,
+        "hour": 18,
+        "minute": 30
+      },
+      {
+        "name": "Tulsa",
+        "week": 3,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OKC FP",
+    "nameInMeetupURL": "OKC-FP",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 5,
+        "weekDay": 2,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "OKC.js",
+    "nameInMeetupURL": "OKC-JS",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 2,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "OKC JUG",
+    "nameInMeetupURL": "",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 2,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "OKC LUGnuts",
+    "nameInMeetupURL": "OKC-LUGnuts",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 5,
+        "hour": 19,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OKC MySQL",
+    "nameInMeetupURL": "Oklahoma-City-MySQL-Meetup",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 4,
+        "weekDay": 4,
+        "hour": 19,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OKC Python",
+    "nameInMeetupURL": "Oklahoma-City-Python-Users-Group",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 3,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "OKC Ruby",
+    "nameInMeetupURL": "OKC-Ruby",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 4,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "OKC#",
+    "nameInMeetupURL": "OKC-Sharp",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 1,
+        "weekDay": 1,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "Refresh OKC",
+    "nameInMeetupURL": "Refresh-OKC",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 5,
+        "weekDay": 3,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
+    "name": "Techlahoma Board",
+    "nameInMeetupURL": "Techlahoma-Foundation",
+    "city": "OKC",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 2,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Ruby",
+    "nameInMeetupURL": "tulsarb",
+    "city": "Tulsa",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Web Devs",
+    "nameInMeetupURL": "Tulsa-Web-Devs",
+    "city": "Tulsa",
+    "regularMeetings": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      },
+      {
+        "name": "Coworking",
+        "week": 4,
+        "weekDay": 5,
+        "hour": 13,
+        "minute": 0
+      },
+      {
+        "name": "Hack Night",
+        "week": 1,
+        "weekDay": 2,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  }
+]

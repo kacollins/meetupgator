@@ -350,35 +350,31 @@ function refreshGroups() {
 
 function getDisplayName(event)
 {
-    var groupName;
+    var group = MG.groups
+            .filter(function(meetupGroup)
+            {
+                return meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase()
+                        || meetupGroup.name == event.group.name;
+            })
+            [0];
 
-    if (event.group.urlname == "")
-    {
-        groupName = event.group.name;
-    }
-    else
-    {
-        groupName = MG.groups
-                .filter(function(meetupGroup)
-                {
-                    return meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase();
-                })
-                .map(function(meetupGroup)
-                {
-                    return meetupGroup.name;
-                })
-                [0];
-    }
+    var groupName = group.name;
 
-    if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
+    if (group.city == "")
     {
-        groupName += " (Tulsa)";
+        //group is in OKC and Tulsa
+        if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
+        {
+            groupName += " (Tulsa)";
+        }
+        else if (!groupName.includes("OKC"))
+        {
+            groupName += " (OKC)";
+        }
     }
-
-    //TODO: Add city to json data
-    if (!groupName.includes("Tulsa") && !groupName.includes("OKC"))
+    else if (!groupName.includes(group.city))
     {
-        groupName += " (OKC)";
+        groupName += " (" + group.city + ")";
     }
 
     return groupName;
