@@ -269,11 +269,12 @@ function removeScheduledEvents(events, group, status)
     }
 }
 
-function getGroupEventsByStatus(group, status) {
+function getGroupEventsByStatus(group, status)
+{
     if (group.nameInMeetupURL.length > 0)
     {
         var meetupParams = {
-            'group_urlname': group.nameInMeetupURL ,
+            'group_urlname': group.nameInMeetupURL,
             'status': status,
             'time': MG.dateRange
         };
@@ -353,7 +354,7 @@ function getDisplayName(event)
     var group = MG.groups
             .filter(function(meetupGroup)
             {
-                return meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase()
+                return (event.group.urlname != "" && meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase())
                         || meetupGroup.name == event.group.name;
             })
             [0];
@@ -380,6 +381,25 @@ function getDisplayName(event)
     return groupName;
 }
 
+function getEventURL(event)
+{
+    if (event.event_url == "")
+    {
+        if (event.group.urlname == "")
+        {
+            return "";
+        }
+        else
+        {
+            return "http://www.meetup.com/" + event.group.urlname;
+        }
+    }
+    else
+    {
+        return event.event_url;
+    }
+}
+
 $(document).ready(function(){
 
   $('#events-calendar').fullCalendar({
@@ -398,8 +418,8 @@ $(document).ready(function(){
             {
               title: getDisplayName(event),
               start: new Date(event.time),
-              url: event.event_url,
-              color: (event.event_url == "" ? '#777777' : '#C92525')
+              url: getEventURL(event),
+              color: event.event_url == "" ? '#777777' : '#C92525'
             });
         });
       });
