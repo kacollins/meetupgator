@@ -135,8 +135,9 @@ function renderEvents() {
   $('#events-table tbody').empty();
 
   var allEvents = [];
-  $.each(MG.groupedEvents, function(groupId, events) {
-    allEvents = allEvents.concat(MG.groupedEvents[groupId]);
+    $.each(MG.groupedEvents, function (groupId)
+    {
+        allEvents = allEvents.concat(MG.groupedEvents[groupId]);
   });
 
   // Sort events by time
@@ -246,23 +247,23 @@ function getDateRange() {
     MG.dateRange = beginDate.getTime() + "," + endDate.getTime();
 }
 
-function createScheduledMeetupsForMonth(group, asOfDate)
+function createScheduledEventsForMonth(group, asOfDate)
 {
-    for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+    for (var eventIndex = 0; eventIndex < group.regularEvents.length; eventIndex++)
     {
-        var meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
+        var event = createScheduledEvent(group, group.regularEvents[eventIndex],
                 asOfDate.getFullYear(), asOfDate.getMonth());
-        MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+        MG.groupedEvents[group.name].push(event);
     }
 }
 
-function createRescheduledMeetingsForMonth(rescheduledMeetings, group)
+function createRescheduledEventsForMonth(rescheduledEvents, group)
 {
-    for (var meetingIndex = 0; meetingIndex < rescheduledMeetings.length; meetingIndex++)
+    for (var eventIndex = 0; eventIndex < rescheduledEvents.length; eventIndex++)
     {
-        var meetupForCurrentMonth = {
+        var event = {
             name: group.name,
-            time: rescheduledMeetings[meetingIndex],
+            time: rescheduledEvents[eventIndex],
             event_url: "",
             group: {
                 name: group.name,
@@ -271,7 +272,7 @@ function createRescheduledMeetingsForMonth(rescheduledMeetings, group)
             }
         };
 
-        MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+        MG.groupedEvents[group.name].push(event);
     }
 }
 
@@ -285,43 +286,41 @@ function createEvents(group)
         var asOfDate = new Date();
         asOfDate.setMonth(asOfDate.getMonth() + i);
 
-        //TODO: if rescheduled meetup(s) for the month, use them instead
-
-        if (group.rescheduledMeetings == undefined)
+        if (group.rescheduledEvents == undefined)
         {
-            createScheduledMeetupsForMonth(group, asOfDate);
+            createScheduledEventsForMonth(group, asOfDate);
         }
         else
         {
-            var rescheduledMeetings = group.rescheduledMeetings
-                    .map(function (rm)
+            var rescheduledEvents = group.rescheduledEvents
+                    .map(function (re)
                     {
-                        return new Date(rm);
+                        return new Date(re);
                     })
-                    .filter(function (rmd)
+                    .filter(function (red)
                     {
-                        return rmd.getFullYear() == asOfDate.getFullYear()
-                                && rmd.getMonth() == asOfDate.getMonth();
+                        return red.getFullYear() == asOfDate.getFullYear()
+                                && red.getMonth() == asOfDate.getMonth();
                     });
 
-            if (rescheduledMeetings.length > 0)
+            if (rescheduledEvents.length > 0)
             {
-                createRescheduledMeetingsForMonth(rescheduledMeetings, group);
+                createRescheduledEventsForMonth(rescheduledEvents, group);
             }
             else
             {
-                createScheduledMeetupsForMonth(group, asOfDate);
+                createScheduledEventsForMonth(group, asOfDate);
             }
         }
     }
 }
 
-function getUpcomingEvents(group) {
-    getGroupEventsByStatus(group, "upcoming");
+function getUpcomingMeetupEvents(group) {
+    getMeetupEvents(group, "upcoming");
 }
 
-function getPastEvents(group) {
-    getGroupEventsByStatus(group, "past");
+function getPastMeetupEvents(group) {
+    getMeetupEvents(group, "past");
 }
 
 function removeScheduledEvents(events, group, status)
@@ -342,7 +341,7 @@ function removeScheduledEvents(events, group, status)
     }
 }
 
-function getGroupEventsByStatus(group, status)
+function getMeetupEvents(group, status)
 {
     if (group.nameInMeetupURL.length > 0)
     {
@@ -367,11 +366,11 @@ function getGroupEventsByStatus(group, status)
     }
 }
 
-function createScheduledMeetup(group, regularMeeting, year, month) {
-    var scheduledTime = getScheduledTime(regularMeeting, year, month);
+function createScheduledEvent(group, regularEvent, year, month) {
+    var scheduledTime = getScheduledTime(regularEvent, year, month);
 
     return {
-        name: regularMeeting.name.length > 0 ? regularMeeting.name : group.name,
+        name: regularEvent.name.length > 0 ? regularEvent.name : group.name,
         time: scheduledTime,
         event_url: "",
         group: {
@@ -382,10 +381,10 @@ function createScheduledMeetup(group, regularMeeting, year, month) {
     };
 }
 
-function getScheduledTime(regularMeeting, year, month) {
-    var scheduledTime = getDateByWeekDay(year, month, regularMeeting.week, regularMeeting.weekDay);
-    scheduledTime.setHours(regularMeeting.hour);
-    scheduledTime.setMinutes(regularMeeting.minute);
+function getScheduledTime(regularEvent, year, month) {
+    var scheduledTime = getDateByWeekDay(year, month, regularEvent.week, regularEvent.weekDay);
+    scheduledTime.setHours(regularEvent.hour);
+    scheduledTime.setMinutes(regularEvent.minute);
 
     //TODO: if date is on a holiday, add a week. if that date is not in the same month, subtract a week from the original date.
 
@@ -421,17 +420,17 @@ function refreshGroups() {
     MG.groups.forEach(createEvents);
     renderGroups();
     renderEvents();
-    MG.groups.forEach(getUpcomingEvents);
-    MG.groups.forEach(getPastEvents);
+    MG.groups.forEach(getUpcomingMeetupEvents);
+    MG.groups.forEach(getPastMeetupEvents);
 }
 
 function getDisplayName(event)
 {
     var group = MG.groups
-            .filter(function(meetupGroup)
+            .filter(function(g)
             {
-                return (event.group.urlname != "" && meetupGroup.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase())
-                        || meetupGroup.name == event.group.name;
+                return (event.group.urlname != "" && g.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase())
+                        || g.name == event.group.name;
             })
             [0];
 
