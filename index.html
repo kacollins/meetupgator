@@ -152,20 +152,45 @@ function renderEvents() {
     var eventStr = event.event_url == ""
             ? event.name
             : '<a href="' + event.event_url + '">' + event.name + '</a>';
-    var groupStr = event.group.urlname == ""
-            ? event.group.name
-            : '<a href="http://meetup.com/' + event.group.urlname + '">' + event.group.name + '</a>';
+    var groupLink = getGroupLink(event.group.name, event.group.urlname, event.group.website);
+
     // add to table
-    var $eventRow = $('<tr><td>' + dateTime + '<td>' + eventStr + '<td>' + groupStr);
+    var $eventRow = $('<tr><td>' + dateTime + '<td>' + eventStr + '<td>' + groupLink);
     $eventRow.addClass('group-' + event.group.urlname);
     $('#events-table tbody').append($eventRow);
 
     var $eventItem = $('<li></li>');
-    $eventItem.append(dateTime + ': ' + eventStr + ' (' + groupStr + ')');
+    $eventItem.append(dateTime + ': ' + eventStr + ' (' + groupLink + ')');
     $('#events-list').append($eventItem);
   });
 
   $('#events-calendar').fullCalendar('refetchEvents');
+}
+
+function getGroupLink(groupName, nameInMeetupURL, website)
+{
+    var groupLink;
+    var url;
+
+    if (nameInMeetupURL.length > 0)
+    {
+        url = "http://meetup.com/" + nameInMeetupURL;
+    }
+    else if (website != undefined && website.length > 0)
+    {
+        url = website;
+    }
+
+    if (url.length > 0)
+    {
+        groupLink = '<a href="' + url + '">' + groupName + '</a>';
+    }
+    else
+    {
+        groupLink = groupName;
+    }
+
+    return groupLink;
 }
 
 function renderGroups() {
@@ -177,11 +202,9 @@ function renderGroups() {
   allGroups.sort(compare);
 
   $.each(allGroups, function(index, group) {
-    var groupStr = group.nameInMeetupURL.length > 0
-            ? '<a href="http://meetup.com/' + group.nameInMeetupURL + '">' + group.name + '</a>'
-            : group.name;
+    var groupLink = getGroupLink(group.name, group.nameInMeetupURL, group.website);
     var $groupRow = $('<tr>').addClass('group-' + group.nameInMeetupURL);
-    $groupRow.append('<td>' + groupStr);
+    $groupRow.append('<td>' + groupLink);
 
       var eventCount = MG.groupedEvents[group.name] == undefined ? 0 : MG.groupedEvents[group.name].length;
 
@@ -353,7 +376,8 @@ function createScheduledMeetup(group, regularMeeting, year, month) {
         event_url: "",
         group: {
             name: group.name,
-            urlname: group.nameInMeetupURL
+            urlname: group.nameInMeetupURL,
+            website: group.website
         }
     };
 }
@@ -439,7 +463,14 @@ function getEventURL(event)
     {
         if (event.group.urlname == "")
         {
-            return "";
+            if (event.group.website == undefined)
+            {
+                return "";
+            }
+            else
+            {
+                return event.group.website;
+            }
         }
         else
         {
