@@ -54,7 +54,6 @@
  <script src="js/moment.min.js"></script>
  <script src="js/jquery.min.js"></script>
  <script src='js/fullcalendar.js'></script>
- <script src='js/gcal.js'></script>
 <script type="text/javascript">
 var MG = {};
 MG.groups = [];
@@ -224,6 +223,35 @@ function getDateRange() {
     MG.dateRange = beginDate.getTime() + "," + endDate.getTime();
 }
 
+function createScheduledMeetupsForMonth(group, asOfDate)
+{
+    for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+    {
+        var meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
+                asOfDate.getFullYear(), asOfDate.getMonth());
+        MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+    }
+}
+
+function createRescheduledMeetingsForMonth(rescheduledMeetings, group)
+{
+    for (var meetingIndex = 0; meetingIndex < rescheduledMeetings.length; meetingIndex++)
+    {
+        var meetupForCurrentMonth = {
+            name: group.name,
+            time: rescheduledMeetings[meetingIndex],
+            event_url: "",
+            group: {
+                name: group.name,
+                urlname: group.nameInMeetupURL,
+                website: group.website
+            }
+        };
+
+        MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+    }
+}
+
 function createEvents(group)
 {
     MG.groupedEvents[group.name] = MG.groupedEvents[group.name] || [];
@@ -234,11 +262,33 @@ function createEvents(group)
         var asOfDate = new Date();
         asOfDate.setMonth(asOfDate.getMonth() + i);
 
-        for (var meetingIndex = 0; meetingIndex < group.regularMeetings.length; meetingIndex++)
+        //TODO: if rescheduled meetup(s) for the month, use them instead
+
+        if (group.rescheduledMeetings == undefined)
         {
-            var meetupForCurrentMonth = createScheduledMeetup(group, group.regularMeetings[meetingIndex],
-                    asOfDate.getFullYear(), asOfDate.getMonth());
-            MG.groupedEvents[group.name].push(meetupForCurrentMonth);
+            createScheduledMeetupsForMonth(group, asOfDate);
+        }
+        else
+        {
+            var rescheduledMeetings = group.rescheduledMeetings
+                    .map(function (rm)
+                    {
+                        return new Date(rm);
+                    })
+                    .filter(function (rmd)
+                    {
+                        return rmd.getFullYear() == asOfDate.getFullYear()
+                                && rmd.getMonth() == asOfDate.getMonth();
+                    });
+
+            if (rescheduledMeetings.length > 0)
+            {
+                createRescheduledMeetingsForMonth(rescheduledMeetings, group);
+            }
+            else
+            {
+                createScheduledMeetupsForMonth(group, asOfDate);
+            }
         }
     }
 }
@@ -312,6 +362,8 @@ function getScheduledTime(regularMeeting, year, month) {
     var scheduledTime = getDateByWeekDay(year, month, regularMeeting.week, regularMeeting.weekDay);
     scheduledTime.setHours(regularMeeting.hour);
     scheduledTime.setMinutes(regularMeeting.minute);
+
+    //TODO: if date is on a holiday, add a week. if that date is not in the same month, subtract a week from the original date.
 
     return scheduledTime;
 }
