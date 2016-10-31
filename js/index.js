@@ -170,8 +170,8 @@ function compare(a, b)
 function getBeginDate()
 {
     var beginDate = new Date(); //first day of last month
-    beginDate.setMonth(beginDate.getMonth() - 1);
     beginDate.setDate(1);
+    beginDate.setMonth(beginDate.getMonth() - 1);
     return beginDate;
 }
 
@@ -228,6 +228,7 @@ function createEvents(group)
     for (var i = -1; i <= 10; i++)
     {
         var asOfDate = new Date();
+        asOfDate.setDate(1);
         asOfDate.setMonth(asOfDate.getMonth() + i);
 
         if (group.rescheduledEvents == undefined)
