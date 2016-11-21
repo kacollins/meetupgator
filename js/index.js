@@ -272,20 +272,21 @@ function getPastMeetupEvents(group)
 
 function removeScheduledEvents(events, group, status)
 {
+    //TODO: consider only removing scheduled events when the group has a meetup event on the same day (as opposed to the same month)
+    //This would show the regularly scheduled event in addition to the rescheduled meetup event
+
     var months = _.uniq(events.map(function (event)
     {
         return new Date(event.time).getMonth();
     }));
 
-    for (var i = 0; i < months.length; i++)
+    MG.groupedEvents[group.name] = MG.groupedEvents[group.name].filter(function (event)
     {
-        MG.groupedEvents[group.name] = MG.groupedEvents[group.name].filter(function (event)
-        {
-            return !(new Date(event.time).getMonth() == months[i]
-            && (status == "upcoming" && event.time > new Date())
-            || (status == "past" && event.time < new Date()));
-        });
-    }
+        return !(months.includes(new Date(event.time).getMonth())
+        && event.event_url == ""
+        && ((status == "upcoming" && event.time > new Date())
+        || (status == "past" && event.time < new Date())));
+    });
 }
 
 function getMeetupEvents(group, status)
@@ -302,7 +303,7 @@ function getMeetupEvents(group, status)
 
         $.getJSON(proxyUrl, function (data)
         {
-            if (data)
+            if (data.results.length > 0)
             {
                 removeScheduledEvents(data.results, group, status);
                 MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);

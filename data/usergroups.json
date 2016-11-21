@@ -152,7 +152,7 @@
     "regularEvents": [
       {
         "name": "",
-        "week": 4,
+        "week": 5,
         "weekDay": 4,
         "hour": 19,
         "minute": 0
@@ -216,7 +216,7 @@
     ]
   },
   {
-    "name": "Techlahoma Board",
+    "name": "Techlahoma",
     "nameInMeetupURL": "Techlahoma-Foundation",
     "city": "OKC",
     "regularEvents": [
