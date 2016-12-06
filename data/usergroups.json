@@ -78,13 +78,6 @@
         "weekDay": 4,
         "hour": 18,
         "minute": 30
-      },
-      {
-        "name": "Tulsa",
-        "week": 3,
-        "weekDay": 1,
-        "hour": 18,
-        "minute": 0
       }
     ]
   },
@@ -224,6 +217,20 @@
         "name": "",
         "week": 3,
         "weekDay": 2,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa PHP",
+    "nameInMeetupURL": "Tulsa-PHP",
+    "city": "Tulsa",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 1,
         "hour": 18,
         "minute": 0
       }

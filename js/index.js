@@ -272,7 +272,7 @@ function getPastMeetupEvents(group)
 
 function removeScheduledEvents(events, group, status)
 {
-    //TODO: consider only removing scheduled events when the group has a meetup event on the same day (as opposed to the same month)
+    //TODO: only remove scheduled events when the group has a meetup event on the same day (as opposed to the same month)
     //This would show the regularly scheduled event in addition to the rescheduled meetup event
 
     var months = _.uniq(events.map(function (event)
@@ -298,17 +298,26 @@ function getMeetupEvents(group, status)
             'status': status,
             'time': MG.dateRange
         };
-        var meetupUrl = 'https://api.meetup.com/2/events.json?' + $.param(meetupParams);
-        var proxyUrl = 'https://crossorigin.me/' + meetupUrl;
+        var meetupUrl = 'https://api.meetup.com/2/events.json?' + $.param(meetupParams) + '&callback=?';
 
-        $.getJSON(proxyUrl, function (data)
+        $.getJSON(meetupUrl, function (data)
         {
-            if (data.results.length > 0)
+            if (data != undefined)
             {
-                removeScheduledEvents(data.results, group, status);
-                MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
-                renderGroups();
-                renderEvents();
+                if (data.results != undefined)
+                {
+                    if (data.results.length > 0)
+                    {
+                        removeScheduledEvents(data.results, group, status);
+                        MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
+                        renderGroups();
+                        renderEvents();
+                    }
+                }
+                else
+                {
+                    console.log(meetupUrl, data);
+                }
             }
         });
     }
