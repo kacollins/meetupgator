@@ -270,22 +270,17 @@ function getPastMeetupEvents(group)
     getMeetupEvents(group, "past");
 }
 
-function removeScheduledEvents(events, group, status)
+function removeScheduledEvents(meetupEvents, group)
 {
-    //TODO: only remove scheduled events when the group has a meetup event on the same day (as opposed to the same month)
-    //This would show the regularly scheduled event in addition to the rescheduled meetup event
-
-    var months = _.uniq(events.map(function (event)
+    var meetupDates = meetupEvents.map(function (event)
     {
-        return new Date(event.time).getMonth();
-    }));
+        return new Date(event.time).getTime();
+    });
 
     MG.groupedEvents[group.name] = MG.groupedEvents[group.name].filter(function (event)
     {
-        return !(months.includes(new Date(event.time).getMonth())
-        && event.event_url == ""
-        && ((status == "upcoming" && event.time > new Date())
-        || (status == "past" && event.time < new Date())));
+        return !(meetupDates.includes(new Date(event.time).getTime())
+                && event.event_url == "");
     });
 }
 
@@ -308,7 +303,7 @@ function getMeetupEvents(group, status)
                 {
                     if (data.results.length > 0)
                     {
-                        removeScheduledEvents(data.results, group, status);
+                        removeScheduledEvents(data.results, group);
                         MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
                         renderGroups();
                         renderEvents();
