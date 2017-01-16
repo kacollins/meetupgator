@@ -1,5 +1,24 @@
 [
   {
+    "name": "Bartlesville Users Group",
+    "nameInMeetupURL": "Bartlesville-User-Group/",
+    "city": "Bartlesville"
+  },
+  {
+    "name": "Big Data and Data Science OKC",
+    "nameInMeetupURL": "Big-Data-in-Oklahoma-City",
+    "city": "OKC",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 1,
+        "weekDay": 4,
+        "hour": 11,
+        "minute": 30
+      }
+    ]
+  },
+  {
     "name": "Code for OKC",
     "nameInMeetupURL": "Code-for-OKC",
     "city": "OKC",
@@ -35,7 +54,12 @@
     ]
   },
   {
-    "name": "Nerdy Girls Code Club",
+    "name": "Muskogee Web Dev and Design",
+    "nameInMeetupURL": "Muskogee-Web-Dev-Design/",
+    "city": "Muskogee"
+  },
+  {
+    "name": "Nerdy Girls codeClub",
     "nameInMeetupURL": "",
     "website": "https://www.meetup.com/NerdyGirlsOKC/",
     "city": "OKC",
@@ -68,13 +92,13 @@
     ]
   },
   {
-    "name": "OK PHP",
-    "nameInMeetupURL": "OklahomaPHP",
-    "city": "",
+    "name": "OKC PHP",
+    "nameInMeetupURL": "OKCPHP",
+    "city": "OKC",
     "regularEvents": [
       {
         "name": "OKC",
-        "week": 1,
+        "week": 2,
         "weekDay": 4,
         "hour": 18,
         "minute": 30
@@ -111,8 +135,7 @@
   },
   {
     "name": "OKC JUG",
-    "nameInMeetupURL": "",
-    "website": "http://okcjug.org/",
+    "nameInMeetupURL": "okcjug",
     "city": "OKC",
     "regularEvents": [
       {
@@ -148,6 +171,20 @@
         "week": 5,
         "weekDay": 4,
         "hour": 19,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "OKC Open Source Hardware",
+    "nameInMeetupURL": "OKC-OSH",
+    "city": "OKC",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 6,
+        "hour": 14,
         "minute": 0
       }
     ]
@@ -195,6 +232,20 @@
     ]
   },
   {
+    "name": "OKC SQL",
+    "nameInMeetupURL": "OKCSQL",
+    "city": "OKC",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
     "name": "Refresh OKC",
     "nameInMeetupURL": "Refresh-OKC",
     "city": "OKC",
@@ -209,14 +260,42 @@
     ]
   },
   {
-    "name": "Techlahoma",
-    "nameInMeetupURL": "Techlahoma-Foundation",
-    "city": "OKC",
+    "name": "Tulsa Game Devs",
+    "nameInMeetupURL": "Tulsa-Game-Developers/",
+    "city": "Tulsa",
     "regularEvents": [
       {
         "name": "",
         "week": 3,
-        "weekDay": 2,
+        "weekDay": 4,
+        "hour": 19,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Java",
+    "nameInMeetupURL": "Tulsa-Java-Developers-Group",
+    "city": "Tulsa",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 2,
+        "weekDay": 3,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Open Source Hardware",
+    "nameInMeetupURL": "Tulsa-Open-Source-Hardware-Meetup",
+    "city": "Tulsa",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 3,
+        "weekDay": 3,
         "hour": 18,
         "minute": 0
       }
