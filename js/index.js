@@ -36,10 +36,11 @@ function getHolidays()
     {
         var holidays = JSON.parse(response);
         var beginDate = getBeginDate();
+        var endDate = getEndDate(beginDate);
 
         for (var i = 0; i < holidays.length; i++)
         {
-            var holidayDate = getHolidayDate(holidays[i], beginDate);
+            var holidayDate = getHolidayDate(holidays[i], beginDate, endDate);
             MG.holidays.push({
                 name: holidays[i].name,
                 date: holidayDate
@@ -48,20 +49,26 @@ function getHolidays()
     });
 }
 
-function getHolidayDate(holiday, beginDate)
+function getHolidayDate(holiday, beginDate, endDate)
 {
     var holidayDate;
     var month = holiday.month - 1;
-    var lastMonth = new Date().getMonth() - 1;
-    var year = beginDate.getFullYear() + (month >= lastMonth ? 0 : 1);
+    var year = beginDate.getFullYear();
 
-    if (holiday.weekDay == undefined)
+    //if holiday month is >= beginDate's month, use beginDate's year
+    //if holiday month is <= endDate's month, use endDate's year
+    if (month <= endDate.getMonth())
     {
-        holidayDate = new Date(year, month, holiday.monthDay);
+        year = endDate.getFullYear();
+    }
+
+    if (holiday.weekDay)
+    {
+        holidayDate = getDateByWeekDay(year, month, holiday.week, holiday.weekDay);
     }
     else
     {
-        holidayDate = getDateByWeekDay(year, month, holiday.week, holiday.weekDay);
+        holidayDate = new Date(year, month, holiday.monthDay);
     }
 
     return holidayDate;
