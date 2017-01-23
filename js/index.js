@@ -119,7 +119,7 @@ function getGroupLink(groupName, nameInMeetupURL, website)
     var groupLink;
     var url;
 
-    if (nameInMeetupURL.length > 0)
+    if (nameInMeetupURL != undefined && nameInMeetupURL.length > 0)
     {
         url = "http://meetup.com/" + nameInMeetupURL;
     }
@@ -153,12 +153,7 @@ function renderGroups()
     {
         var groupLink = getGroupLink(group.name, group.nameInMeetupURL, group.website);
         var $groupRow = $('<tr>').addClass('group-' + group.nameInMeetupURL);
-        $groupRow.append('<td>' + groupLink);
-
-        var eventCount = MG.groupedEvents[group.name] == undefined ? 0 : MG.groupedEvents[group.name].length;
-
-        var badgeClass = (eventCount > 0) ? 'badge badge-success' : 'badge';
-        $groupRow.append('<td><span class="' + badgeClass + '">' + (eventCount > 0 ? eventCount : "loading") + '</span>');
+        $groupRow.append('<td style="padding:2px">' + groupLink);
 
         $('#groups-table tbody').append($groupRow);
     });
@@ -200,11 +195,14 @@ function getDateRange()
 
 function createScheduledEventsForMonth(group, asOfDate)
 {
-    for (var eventIndex = 0; eventIndex < group.regularEvents.length; eventIndex++)
+    if (group.regularEvents)
     {
-        var event = createScheduledEvent(group, group.regularEvents[eventIndex],
-            asOfDate.getFullYear(), asOfDate.getMonth());
-        MG.groupedEvents[group.name].push(event);
+        for (var eventIndex = 0; eventIndex < group.regularEvents.length; eventIndex++)
+        {
+            var event = createScheduledEvent(group, group.regularEvents[eventIndex],
+                asOfDate.getFullYear(), asOfDate.getMonth());
+            MG.groupedEvents[group.name].push(event);
+        }
     }
 }
 
@@ -293,9 +291,10 @@ function removeScheduledEvents(meetupEvents, group)
 
 function getMeetupEvents(group, status)
 {
-    if (group.nameInMeetupURL.length > 0)
+    if (group.nameInMeetupURL != undefined && group.nameInMeetupURL.length > 0)
     {
         var meetupParams = {
+            'key': '7c967b5971591a623e7a5e793e476a',
             'group_urlname': group.nameInMeetupURL,
             'status': status,
             'time': MG.dateRange
@@ -304,22 +303,19 @@ function getMeetupEvents(group, status)
 
         $.getJSON(meetupUrl, function (data)
         {
-            if (data != undefined)
+            if (data != undefined && data.results != undefined)
             {
-                if (data.results != undefined)
+                if (data.results.length > 0)
                 {
-                    if (data.results.length > 0)
-                    {
-                        removeScheduledEvents(data.results, group);
-                        MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
-                        renderGroups();
-                        renderEvents();
-                    }
+                    removeScheduledEvents(data.results, group);
+                    MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
+                    renderGroups();
+                    renderEvents();
                 }
-                else
-                {
-                    console.log(meetupUrl, data);
-                }
+            }
+            else
+            {
+                console.log("error getting meetup data", meetupUrl, data);
             }
         });
     }
@@ -383,37 +379,58 @@ function refreshGroups()
     MG.groups.forEach(createEvents);
     renderGroups();
     renderEvents();
-    MG.groups.forEach(getUpcomingMeetupEvents);
-    MG.groups.forEach(getPastMeetupEvents);
+}
+
+function loadOKCAreaEvents()
+{
+    MG.groups.filter(function (g) { return g.city == "OKC"; }).forEach(getUpcomingMeetupEvents);
+    MG.groups.filter(function (g) { return g.city == "OKC"; }).forEach(getPastMeetupEvents);
+}
+
+function loadTulsaAreaEvents()
+{
+    //HACK: need to add area to json
+    MG.groups.filter(function (g) { return g.city != "OKC"; }).forEach(getUpcomingMeetupEvents);
+    MG.groups.filter(function (g) { return g.city != "OKC"; }).forEach(getPastMeetupEvents);
 }
 
 function getDisplayName(event)
 {
+    var groupName = "";
+
     var group = MG.groups
         .filter(function (g)
         {
-            return (event.group.urlname != "" && g.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase())
+            return (g.nameInMeetupURL != undefined && event.group.urlname != undefined && event.group.urlname != ""
+                && g.nameInMeetupURL.toUpperCase() == event.group.urlname.toUpperCase())
                 || g.name == event.group.name;
         })
         [0];
 
-    var groupName = group.name;
-
-    if (group.city == "")
+    if (group == undefined)
     {
-        //group is in OKC and Tulsa
-        if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
-        {
-            groupName += " (Tulsa)";
-        }
-        else if (!groupName.includes("OKC"))
-        {
-            groupName += " (OKC)";
-        }
+        console.log("group not found", event, MG.groups);
     }
-    else if (!groupName.includes(group.city))
+    else
     {
-        groupName += " (" + group.city + ")";
+        groupName = group.name;
+
+        if (group.city == "")
+        {
+            //group is in OKC and Tulsa
+            if (event.name.includes("Tulsa") && !groupName.includes("Tulsa"))
+            {
+                groupName += " (Tulsa)";
+            }
+            else if (!groupName.includes("OKC"))
+            {
+                groupName += " (OKC)";
+            }
+        }
+        else if (!groupName.includes(group.city))
+        {
+            groupName += " (" + group.city + ")";
+        }
     }
 
     return groupName;

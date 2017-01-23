@@ -8,28 +8,15 @@
     <link rel='stylesheet' type='text/css' href='css/override.css'/>
 </head>
 <body>
-<div class="container" style="margin-top:20px;">
-    <div style="border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-        <h1>
-            Techlahoma user group events
-        </h1>
-    </div>
-
-    <div style="width: 100%;">
-        <div class="pull-left" style="width: 25%;">
-            <table class="table" id="groups-table" style="display:none;">
-                <thead>
-                <tr>
-                    <th>Group
-                    <th># Events
-                    <th>
-                </thead>
-                <tbody></tbody>
-            </table>
+<div class="container" style="margin-top:10px;">
+    <div class="pull-left" style="width: 75%;">
+        <div class="left" style="border-bottom: 1px solid #ccc; margin-bottom: 10px;">
+            <h1>
+                Techlahoma user group events
+            </h1>
         </div>
 
-        <div class="pull-right" style="width: 75%;">
-
+        <div>
             <ul class="nav nav-pills pull-left">
                 <li id="events-calendar-link" class="events-link active"><a href="javascript:changeView('calendar')">Calendar
                     View</a>
@@ -53,6 +40,18 @@
             </ul>
 
         </div>
+    </div>
+
+    <div class="pull-right" style="width: 25%;">
+        <button onclick="loadOKCAreaEvents()" class="btn btn-primary" style="margin: 10px 0 15px 20px">Load OKC Area Meetups</button>
+        <button onclick="loadTulsaAreaEvents()" class="btn btn-primary" style="margin: 10px 0 15px 20px">Load Tulsa Area Meetups</button>
+        <table class="table" id="groups-table" style="display:none;margin-left:20px;">
+            <thead>
+            <tr>
+                <th style="padding:2px">User Group
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
