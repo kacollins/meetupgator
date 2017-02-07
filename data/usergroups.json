@@ -2,7 +2,8 @@
   {
     "name": "Bartlesville Users Group",
     "nameInMeetupURL": "Bartlesville-User-Group/",
-    "city": "Bartlesville"
+    "city": "Bartlesville",
+    "area": "Tulsa"
   },
   {
     "name": "Big Data and Data Science OKC",
@@ -57,6 +58,7 @@
     "name": "Muskogee Web Dev and Design",
     "nameInMeetupURL": "Muskogee-Web-Dev-Design/",
     "city": "Muskogee",
+    "area": "Tulsa",
     "regularEvents": [
       {
         "name": "",

@@ -383,15 +383,20 @@ function refreshGroups()
 
 function loadOKCAreaEvents()
 {
-    MG.groups.filter(function (g) { return g.city == "OKC"; }).forEach(getUpcomingMeetupEvents);
-    MG.groups.filter(function (g) { return g.city == "OKC"; }).forEach(getPastMeetupEvents);
+    loadAreaEvents("OKC");
 }
 
 function loadTulsaAreaEvents()
 {
-    //HACK: need to add area to json
-    MG.groups.filter(function (g) { return g.city != "OKC"; }).forEach(getUpcomingMeetupEvents);
-    MG.groups.filter(function (g) { return g.city != "OKC"; }).forEach(getPastMeetupEvents);
+    loadAreaEvents("Tulsa");
+}
+
+function loadAreaEvents(area)
+{
+    var groups = MG.groups.filter(function (g) { return g.city == area || g.area == area; });
+
+    groups.forEach(getUpcomingMeetupEvents);
+    groups.forEach(getPastMeetupEvents);
 }
 
 function getDisplayName(event)
