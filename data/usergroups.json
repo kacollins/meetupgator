@@ -56,7 +56,16 @@
   {
     "name": "Muskogee Web Dev and Design",
     "nameInMeetupURL": "Muskogee-Web-Dev-Design/",
-    "city": "Muskogee"
+    "city": "Muskogee",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 4,
+        "weekDay": 1,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
   },
   {
     "name": "Nerdy Girls codeClub",
