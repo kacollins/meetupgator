@@ -275,7 +275,7 @@ function getPastMeetupEvents(group)
     getMeetupEvents(group, "past");
 }
 
-function removeScheduledEvents(meetupEvents, group)
+function removeEvents(meetupEvents, group)
 {
     var meetupDates = meetupEvents.map(function (event)
     {
@@ -284,8 +284,7 @@ function removeScheduledEvents(meetupEvents, group)
 
     MG.groupedEvents[group.name] = MG.groupedEvents[group.name].filter(function (event)
     {
-        return !(meetupDates.includes(new Date(event.time).getTime())
-                && event.event_url == "");
+        return !(meetupDates.includes(new Date(event.time).getTime()));
     });
 }
 
@@ -307,10 +306,14 @@ function getMeetupEvents(group, status)
             {
                 if (data.results.length > 0)
                 {
-                    removeScheduledEvents(data.results, group);
+                    removeEvents(data.results, group);
                     MG.groupedEvents[group.name].push.apply(MG.groupedEvents[group.name], data.results);
                     renderGroups();
                     renderEvents();
+                }
+                else
+                {
+                    console.log("no", status, "meetup events found for", group.nameInMeetupURL);
                 }
             }
             else
@@ -393,7 +396,10 @@ function loadTulsaAreaEvents()
 
 function loadAreaEvents(area)
 {
-    var groups = MG.groups.filter(function (g) { return g.city == area || g.area == area; });
+    var groups = MG.groups.filter(function (g)
+    {
+        return g.city == area || g.area == area;
+    });
 
     groups.forEach(getUpcomingMeetupEvents);
     groups.forEach(getPastMeetupEvents);
