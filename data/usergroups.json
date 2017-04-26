@@ -1,6 +1,6 @@
 [
   {
-    "name": "Bartlesville Users Group",
+    "name": "Bartlesville User Group",
     "nameInMeetupURL": "Bartlesville-User-Group",
     "city": "Bartlesville",
     "area": "Tulsa",
@@ -71,6 +71,12 @@
     ]
   },
   {
+    "name": "Free Code Camp OKC",
+    "nameInMeetupURL": "FreeCodeCampOKC",
+    "city": "OKC",
+    "area": "OKC"
+  },
+  {
     "name": "Muskogee Web Dev and Design",
     "nameInMeetupURL": "Muskogee-Web-Dev-Design",
     "city": "Muskogee",
@@ -100,9 +106,7 @@
       }
     ],
     "rescheduledEvents": [
-      "2016-11-20T14:00:00.000-0600",
-      "2016-12-18T14:00:00.000-0600",
-      "2017-05-21T14:00:00.000-0600",
+      "2017-05-21T14:00:00.000-0500",
       "2017-11-19T14:00:00.000-0600",
       "2017-12-17T14:00:00.000-0600"
     ]
@@ -290,6 +294,41 @@
     ]
   },
   {
+    "name": "Techlahoma",
+    "nameInMeetupURL": "Techlahoma-Foundation",
+    "city": "OKC",
+    "regularEvents": [
+      {
+        "name": "Hack Night",
+        "week": 1,
+        "weekDay": 2,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Agile Practitioners",
+    "nameInMeetupURL": "TulsaAgilePractitioners",
+    "city": "Tulsa",
+    "regularEvents": [
+      {
+        "name": "Lean Coffee for Lunch",
+        "week": 2,
+        "weekDay": 2,
+        "hour": 11,
+        "minute": 30
+      },
+      {
+        "name": "This Month on TAP",
+        "week": 2,
+        "weekDay": 4,
+        "hour": 18,
+        "minute": 0
+      }
+    ]
+  },
+  {
     "name": "Tulsa Game Devs",
     "nameInMeetupURL": "Tulsa-Game-Developers",
     "city": "Tulsa",
@@ -298,7 +337,7 @@
         "name": "",
         "week": 3,
         "weekDay": 4,
-        "hour": 19,
+        "hour": 18,
         "minute": 0
       }
     ]
@@ -314,6 +353,20 @@
         "weekDay": 3,
         "hour": 18,
         "minute": 0
+      }
+    ]
+  },
+  {
+    "name": "Tulsa Lambda Lunch",
+    "nameInMeetupURL": "Tulsa-Lambda-Lunch",
+    "city": "Tulsa",
+    "regularEvents": [
+      {
+        "name": "",
+        "week": 5,
+        "weekDay": 2,
+        "hour": 11,
+        "minute": 30
       }
     ]
   },
