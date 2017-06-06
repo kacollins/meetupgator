@@ -117,7 +117,7 @@ function renderEvents()
 function getGroupLink(groupName, nameInMeetupURL, website)
 {
     var groupLink;
-    var url;
+    var url = "";
 
     if (nameInMeetupURL != undefined && nameInMeetupURL.length > 0)
     {
