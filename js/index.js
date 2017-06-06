@@ -3,6 +3,7 @@ MG.groups = [];
 MG.groupedEvents = {};
 MG.dateRange = "";
 MG.holidays = [];
+MG.conferences = [];
 
 //https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 function loadJSON(filename, async, callback)
@@ -44,6 +45,25 @@ function getHolidays()
             MG.holidays.push({
                 name: holidays[i].name,
                 date: holidayDate
+            });
+        }
+    });
+}
+
+function getConferences()
+{
+    loadJSON("conferences", true, function (response)
+    {
+        var conferences = JSON.parse(response);
+
+        for (var i = 0; i < conferences.length; i++)
+        {
+            var conferenceDate = new Date(conferences[i].year, conferences[i].month - 1, conferences[i].day);
+
+            MG.conferences.push({
+                name: conferences[i].name,
+                date: conferenceDate,
+                url: conferences[i].url
             });
         }
     });
@@ -377,6 +397,7 @@ function getDateByWeekDay(year, month, week, weekDay)
 function refreshGroups()
 {
     getGroups();
+    getConferences();
     getHolidays();
     getDateRange();
     MG.groups.forEach(createEvents);
