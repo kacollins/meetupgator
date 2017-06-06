@@ -521,7 +521,8 @@
         "minute": 15
       }
     ],
-    "type": "affiliated"
+    "type": "affiliated",
+    "website": "http://www.okcsug.com/"
   },
   {
     "name": "OKC Tableau",
@@ -536,7 +537,8 @@
         "minute": 0
       }
     ],
-    "type": "affiliated"
+    "type": "affiliated",
+    "website": "https://community.tableau.com/groups/oklahoma-city/"
   },
   {
     "name": "OKC WordPress",
