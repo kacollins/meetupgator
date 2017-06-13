@@ -39,14 +39,12 @@ function getHolidays()
         var beginDate = getBeginDate();
         var endDate = getEndDate(beginDate);
 
-        for (var i = 0; i < holidays.length; i++)
-        {
-            var holidayDate = getHolidayDate(holidays[i], beginDate, endDate);
-            MG.holidays.push({
-                name: holidays[i].name,
-                date: holidayDate
-            });
-        }
+        MG.holidays = holidays.map(function(holiday){
+            return {
+                name: holiday.name,
+                date: getHolidayDate(holiday, beginDate, endDate)
+            }
+        });
     });
 }
 
@@ -56,16 +54,13 @@ function getConferences()
     {
         var conferences = JSON.parse(response);
 
-        for (var i = 0; i < conferences.length; i++)
-        {
-            var conferenceDate = new Date(conferences[i].year, conferences[i].month - 1, conferences[i].day);
-
-            MG.conferences.push({
-                name: conferences[i].name,
-                date: conferenceDate,
-                url: conferences[i].url
-            });
-        }
+        MG.conferences = conferences.map(function(conference){
+            return {
+                name: conference.name,
+                date: new Date(conference.year, conference.month - 1, conference.day),
+                url: conference.url
+            }
+        });
     });
 }
 
