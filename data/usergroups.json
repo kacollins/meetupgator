@@ -547,10 +547,10 @@
     "regularEvents": [
       {
         "name": "",
-        "week": 5,
-        "weekDay": 1,
-        "hour": 19,
-        "minute": 0
+        "week": 4,
+        "weekDay": 4,
+        "hour": 11,
+        "minute": 30
       }
     ],
     "type": "affiliated"
